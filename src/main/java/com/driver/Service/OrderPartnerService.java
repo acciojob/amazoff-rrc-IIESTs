@@ -32,7 +32,11 @@ public class OrderPartnerService {
         orderPartnerRepository.ordersOfPartner.put(partnerId,orderList);
     }
     public int getNumberOfOrders(String partnerId){
-       return partnerRepository.deliveryPartner.get(partnerId).getNumberOfOrders();
+        if(partnerRepository.deliveryPartner.containsKey(partnerId)) {
+            return partnerRepository.deliveryPartner.get(partnerId).getNumberOfOrders();
+        }else{
+            return 0;
+        }
     }
 
     public List<String> getOrderList(String partnerId){
