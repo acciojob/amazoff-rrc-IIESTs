@@ -47,7 +47,7 @@ public class OrderPartnerService {
     }
 
     public List<String> getOrderList(String partnerId){
-      return orderPartnerRepository.ordersOfPartner.getOrDefault(partnerId,null);
+      return orderPartnerRepository.ordersOfPartner.getOrDefault(partnerId,new ArrayList<>());
     }
     public int countUnassignedOrders(){
         int totalOrders = orderRepository.orderDetails.size();
@@ -104,7 +104,12 @@ public class OrderPartnerService {
             String partnerId = orderPartnerRepository.orderToPartner.get(orderId);
             orderPartnerRepository.orderToPartner.remove(orderId);
             List<String> orders = orderPartnerRepository.ordersOfPartner.get(partnerId);
-            orders.remove(orderId);
+            for(int i=0;i<orders.size();i++) {
+                if(orders.get(i).equals(orderId)) {
+                    orders.remove(i);
+                    break;
+                }
+            }
             orderPartnerRepository.ordersOfPartner.put(partnerId,orders);
         }
 
