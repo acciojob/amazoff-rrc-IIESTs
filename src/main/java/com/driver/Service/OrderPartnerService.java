@@ -23,8 +23,15 @@ public class OrderPartnerService {
     @Autowired
     PartnerRepository partnerRepository;
 
+    @Autowired
+    OrderService orderService;
+
+    @Autowired
+    PartnerService partnerService;
+
     public void addOrderPartner(String orderId, String partnerId){
         orderPartnerRepository.orderToPartner.put(orderId,partnerId);
+        partnerService.addPartner(partnerId);
         int noOfOrders = partnerRepository.deliveryPartner.get(partnerId).getNumberOfOrders()+1;
         partnerRepository.deliveryPartner.get(partnerId).setNumberOfOrders(noOfOrders);
         List<String> orderList = getOrderList(partnerId);
