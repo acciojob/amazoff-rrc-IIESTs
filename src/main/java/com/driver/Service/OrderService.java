@@ -23,8 +23,8 @@ public class OrderService {
     }
 
     public Order getOrderById(String id){
+        return orderRepository.orderDetails.getOrDefault(id, null);
 
-       return  orderRepository.orderDetails.get(id);
     }
 
     public List<String> getAllOrders(){

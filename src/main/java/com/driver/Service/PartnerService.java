@@ -18,7 +18,7 @@ public class PartnerService {
     }
 
     public DeliveryPartner getPartner(String partnerId){
-        return partnerRepository.deliveryPartner.get(partnerId);
+        return partnerRepository.deliveryPartner.getOrDefault(partnerId,null) ;
     }
 
 }

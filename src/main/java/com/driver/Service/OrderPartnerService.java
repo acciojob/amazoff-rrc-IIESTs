@@ -31,12 +31,12 @@ public class OrderPartnerService {
 
     public void addOrderPartner(String orderId, String partnerId){
         orderPartnerRepository.orderToPartner.put(orderId,partnerId);
-        partnerService.addPartner(partnerId);
+        if(!partnerRepository.deliveryPartner.containsKey(partnerId)){
+            partnerService.addPartner(partnerId);
+        }
         int noOfOrders = partnerRepository.deliveryPartner.get(partnerId).getNumberOfOrders()+1;
         partnerRepository.deliveryPartner.get(partnerId).setNumberOfOrders(noOfOrders);
-        List<String> orderList = getOrderList(partnerId);
-        orderList.add(orderId);
-        orderPartnerRepository.ordersOfPartner.put(partnerId,orderList);
+        orderPartnerRepository.ordersOfPartner.get(partnerId).add(orderId);
     }
     public int getNumberOfOrders(String partnerId){
         if(partnerRepository.deliveryPartner.containsKey(partnerId)) {
@@ -47,7 +47,7 @@ public class OrderPartnerService {
     }
 
     public List<String> getOrderList(String partnerId){
-      return orderPartnerRepository.ordersOfPartner.get(partnerId);
+      return orderPartnerRepository.ordersOfPartner.getOrDefault(partnerId,null);
     }
     public int countUnassignedOrders(){
         int totalOrders = orderRepository.orderDetails.size();
@@ -57,7 +57,7 @@ public class OrderPartnerService {
     public int countOrdersAfterTime(String time,String partnerId){
         int currTime = convertTimeToInt(time);
         List<Integer> deliveryTimes = new ArrayList<>();
-        List<String> orders = orderPartnerRepository.ordersOfPartner.get(partnerId);
+        List<String> orders = orderPartnerRepository.ordersOfPartner.getOrDefault(partnerId,new ArrayList<>());
         for(String o :orders){
           deliveryTimes.add(orderRepository.orderDetails.get(o).getDeliveryTime());
         }
@@ -71,7 +71,7 @@ public class OrderPartnerService {
     }
     public String lastDeliveryTime(String partnerId){
         List<Integer> deliveryTimes = new ArrayList<>();
-        List<String> orders = orderPartnerRepository.ordersOfPartner.get(partnerId);
+        List<String> orders = orderPartnerRepository.ordersOfPartner.getOrDefault(partnerId,new ArrayList<>());
         for(String o :orders){
             deliveryTimes.add(orderRepository.orderDetails.get(o).getDeliveryTime());
         }
